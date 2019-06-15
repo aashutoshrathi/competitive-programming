@@ -11,7 +11,7 @@
 
 using namespace std;	// Kyuki yahi mai-baap hai
  
-#define mod(x) 			x%1000000007;
+#define mod(x) 			x%1000000007
 #define MIN(n1, n2)     ((n1) > (n2) ? (n2) : (n1))
 #define MAX(n1, n2)     ((n1) > (n2) ? (n1) : (n2))
 #define MID(s, e)       (s+(e-s)/2)
@@ -22,20 +22,26 @@ using namespace std;	// Kyuki yahi mai-baap hai
 typedef pair <long, long> lpairs;
 typedef long long ll;
 
+tuple<ll, ll, ll> extended_gcd(ll a, ll b) {
+	if (a == 0)
+		return make_tuple(b, 0, 1);
+
+	ll gcd, x, y;
+	tie(gcd, x, y) = extended_gcd(b % a, a);
+
+	return make_tuple(gcd, (y - (b/a) * x), x);
+}
+
 int main() {
     fast
     ll t;
     cin >> t;
     while(t--) {
         ll n, k;
+        vector<ll> v;
         cin >> n >> k;
-        ll res = 0;
-        
-        res += k-1; // add all elements less than k
-
-        res += MAX(2*k - n+k-1, 0); // all numbers between 2k and n+k-1        
-        cout << res << endl;
+        ll res = MAX(0, 2*k-n-1);
+        cout << mod(res) << endl;
     }
-    
     return 0;
 }
