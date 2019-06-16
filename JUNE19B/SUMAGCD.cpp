@@ -37,11 +37,14 @@ int main() {
     ll t;
     cin >> t;
     while(t--) {
-        ll n, k;
+        ll n, x;
         vector<ll> v;
-        cin >> n >> k;
-        ll res = MAX(0, 2*k-n-1);
-        cout << mod(res) << endl;
+        cin >> n;
+        for(ll i=0; i<n; i++) {
+            cin >> x;
+            v.push_back(x);
+        }
+                
     }
     return 0;
 }
