@@ -22,6 +22,13 @@ using namespace std;	// Kyuki yahi mai-baap hai
 typedef pair <long, long> lpairs;
 typedef long long ll;
 
+ll gcd(ll a,ll b){
+    if(b==0) {
+        return a;
+    }
+    return gcd(b, a%b);
+}
+
 tuple<ll, ll, ll> extended_gcd(ll a, ll b) {
 	if (a == 0)
 		return make_tuple(b, 0, 1);
@@ -37,14 +44,45 @@ int main() {
     ll t;
     cin >> t;
     while(t--) {
-        ll n, x;
+        ll n, z;
         vector<ll> v;
         cin >> n;
+        ll p1 = 0, p2 = 0;
+
         for(ll i=0; i<n; i++) {
-            cin >> x;
-            v.push_back(x);
+            cin >> z;
+            v.push_back(z);
         }
-                
+
+        ll ansOne = INT_MIN, ansTwo = INT_MIN;
+
+        for(ll i=0;i<n;i++) {
+            if(ansOne < v[i]) {
+                p1 = i;
+            }
+            ansOne = max(ansOne, v[i]);
+        }
+
+        for(ll i=0;i<n;i++) {
+            if(i!=p1 && v[i]<ansOne && ansTwo<v[i]) {
+                ansTwo = v[i];
+                p2 = i;
+            }
+        }
+
+        if(ansTwo == INT_MIN) {
+            cout << 2*ansOne << endl;
+            continue;
+        }
+
+        ll x = ansTwo, y = ansOne;
+        for(ll i=0; i<n; i++) {
+            if(i!=p1 && v[i]!=ansOne)
+                x=gcd(v[i],x);
+            if(i!=p2 && v[i]!=ansTwo)
+                y=gcd(v[i],y);
+        }
+        cout << max(x+ansOne, y+ansTwo) << endl;
     }
     return 0;
 }
