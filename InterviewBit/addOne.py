@@ -1,7 +1,7 @@
 ## https://www.interviewbit.com/problems/add-one-to-number/
 ## Asked in Microsoft and Google
 
-def plusOne(self, A):
+def plusOne(A):
     for i in range(len(A)-1, -1, -1):
         if A[i] == 9:
             A[i] = 0
@@ -16,3 +16,5 @@ def plusOne(self, A):
 
     A = [1] + A
     return A
+
+print(plusOne([1,9,9,9,9]))
