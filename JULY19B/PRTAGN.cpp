@@ -29,14 +29,18 @@ int main() {
     ll t;
     cin >> t;
     while(t--) {
-        ll n;
-        string k;
-        cin >> n;
-        cin >> k;
-        ll res = 0;
-        for (ll i = 0; i < k.length(); i++)
-            res = (res*10 + (ll)k[i] - '0') % n;
-        cout << 2*res << endl;
+        ll q;
+        cin >> q;
+        ll x;
+        ll o = 0, e = 0;
+        unordered_set<ll> s;
+        for(ll i=0; i<q; i++) {
+            cin >> x;
+            if(s.find(x) === s.end()) {
+                s.insert(x);
+                
+            }
+        }
     }
     return 0;
 }
