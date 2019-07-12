@@ -23,23 +23,19 @@ using namespace std;	// Kyuki yahi mai-baap hai
 typedef pair <long, long> lpairs;
 typedef long long ll;
 
-
 int main() {
     fast
     ll t;
     cin >> t;
+    ll x;
     while(t--) {
-        ll n;
-        string k;
-        cin >> n;
-        cin >> k;
-        ll res = 0;
-        for (ll i = 0; i < k.length(); i++)
-            res = (res*10 + (ll)k[i] - '0') % n;
-        if(res > (n+1)/2) {
-            res = n - res;
-        }
-        cout << MIN(2*res - ((n%2==0) && (res==n/2)), 2*(n/2)) << endl;
+        string s;
+        cout << 1 << " " << 1000000000 << endl;
+        cin >> x;
+        cout << 1 << " " << 111 << endl;
+        cin >> x;
+        cout << 2 << " " << 1 << endl;
+        cin >> s;             
     }
     return 0;
 }

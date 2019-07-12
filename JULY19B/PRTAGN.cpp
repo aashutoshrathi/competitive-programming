@@ -23,7 +23,6 @@ using namespace std;	// Kyuki yahi mai-baap hai
 typedef pair <long, long> lpairs;
 typedef long long ll;
 
-
 int main() {
     fast
     ll t;
@@ -32,14 +31,35 @@ int main() {
         ll q;
         cin >> q;
         ll x;
+        int a[2000005]={0};
+        vector<ll> v;
         ll o = 0, e = 0;
-        unordered_set<ll> s;
         for(ll i=0; i<q; i++) {
             cin >> x;
-            if(s.find(x) === s.end()) {
-                s.insert(x);
-                
+            ll l=v.size();
+            if(a[x]==0) {
+                for(ll j=0; j<l; j++) {
+                    ll z = x^v[j];
+                    if(a[z]==0) {
+                        v.push_back(z);
+                        a[z]=1;
+                        __builtin_popcount(z)%2 ? o++ : e++;
+                    }
+                }
+                v.push_back(x);
+                a[x]=1;
+                __builtin_popcount(x)%2 ? o++ : e++;
             }
+
+            // Set
+            // for(ll j=0; j<v.size(); j++) {
+            //     cout << v[j] << " ";
+            // } cout << endl;
+
+            // for(ll j=0; j<v.size(); j++) {
+            //     parity(v[j]) ? o++ : e++;
+            // }
+            cout << e << " " << o << endl;
         }
     }
     return 0;
