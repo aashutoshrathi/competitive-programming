@@ -48,7 +48,7 @@ int main() {
     ll x;
     while(t--) {
         string s;
-        ll firstOne = 44721;
+        ll firstOne = 31623LL;
         cout << 1 << " " << firstOne << endl << flush;
         cin >> x;
         ll sqSh = pow(firstOne, 2);
@@ -85,5 +85,5 @@ int main() {
         }
         cin >> s;
     }   
-    return 0;
+    return 42;
 }
