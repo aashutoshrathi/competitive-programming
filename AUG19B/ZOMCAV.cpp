@@ -26,15 +26,26 @@ typedef long long ll;
 #define Y "YES"
 
 ll *constructBITree(ll n) { 
-    ll *BITree = new ll[n+1]; 
+    ll *BITree = new long long[n+1]; 
     for (ll i=1; i<=n; i++) 
         BITree[i] = 0; 
     return BITree; 
 }
 
+ll getThatSonOfTree(ll BITree[], ll index) { 
+    ll sum = 0;
+  
+    index++;
+    while (index>0) { 
+        sum += BITree[index];   
+        index -= index & (-index); 
+    } 
+    return sum; 
+}
+
 void updateBIT(ll BITree[], ll n, ll index, ll val) { 
     index++;
-    while (index <= n) { 
+    while (index <= n) {
         BITree[index] += val; 
         index += index & (-index); 
     }
@@ -42,7 +53,7 @@ void updateBIT(ll BITree[], ll n, ll index, ll val) {
 
 void update(ll BITree[], ll l, ll r, ll n, ll val) { 
     updateBIT(BITree, n, l, val);   
-    // updateBIT(BITree, n, r+1, -val); 
+    updateBIT(BITree, n, r+1, -val); 
 }
 
 int main() {
@@ -69,16 +80,21 @@ int main() {
             ll end = MIN(n-1, i+c[i]);
             update(b, start, end, n, 1); 
         }
-        for(ll i=0; i<n; i++) {
-            cout << b[i] << " ";
-        }
 
         // Sort karo re
-        sort(b, b+n);
+        // sort(b, b+n);
         sort(h, h+n);
+        
+        vector<ll> majaMa;
 
         for(ll i=0; i<n; i++) {
-            if(h[i] != b[i]) {
+            majaMa.push_back(getThatSonOfTree(b, i));
+        }
+
+        sort(majaMa.begin(), majaMa.end());
+
+        for(ll i=0; i<n; i++) {
+            if(majaMa[i] != h[i]) {
                 cout << N << endl;
                 phasa = true;
                 break;
