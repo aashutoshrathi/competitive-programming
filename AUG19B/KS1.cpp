@@ -6,7 +6,7 @@
 // Use memcpy while copying matrix :D
 // o_O Never do calculation in if block -_- 
 // Use __builtin_popcount(z) to get set bit count of z
-
+ 
 #include <bits/stdc++.h> 	// Apne aap me sab kuch hai isme 
 #include <stdio.h>
 
@@ -20,8 +20,6 @@ using namespace std;	// Kyuki yahi mai-baap hai
 #define fin cin.tie(NULL)
 #define fout cout.tie(NULL)
 #define fio ios::sync_with_stdio(false)
-#define W "WIN"
-#define L "LOSE"
 typedef pair <long, long> lpairs;
 typedef long long ll;
 
@@ -60,7 +58,7 @@ void SieveOfEratosthenes(int n) {
        if (prime[p]) {
            primes.push_back(p);
        }
-    }
+    } 
 }
 
 int main() {
@@ -68,18 +66,13 @@ int main() {
     ll t;
     cin >> t;
     while(t--) {
-        string s;
-        cin >> s;
-        ll sum = 0;
-        bool res = false;
-        for(ll i=0; i<s.size(); i++) {
-            res ^= (s[i]=='1');
+        ll n;
+        cin >> n;
+        ll a[n];
+        for(ll i=0; i<n; i++) {
+            cin >> a[i];
         }
-        if(res) {
-            cout << W << endl;
-        } else {
-            cout << L << endl;
-        }
+        
     }
     return 0;
 }
