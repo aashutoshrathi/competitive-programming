@@ -69,10 +69,24 @@ int main() {
         ll n;
         cin >> n;
         ll a[n];
+        ll res = 0;
         for(ll i=0; i<n; i++) {
             cin >> a[i];
         }
+
+        for(ll i=0; i<n-1; i++) {
+            ll xorwa = a[i];
+            for(ll j=i+1; j<n; j++) {
+                xorwa ^= a[j];
+                if(xorwa == 0) {
+                    res += (1 << (j-i) - 1);
+                }
+            }
+        }
+
+        // Create a set of triplets.
         
+        cout << res << endl;
     }
     return 0;
 }
