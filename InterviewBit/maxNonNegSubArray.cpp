@@ -2,11 +2,11 @@
 #include <bits/stdc++.h> 	// Apne aap me sab kuch hai isme 
 #include <stdio.h>
 
-using namespace std;	// Kyuki yahi mai-baap hai
+using namespace std; // Kyuki yahi mai-baap hai
 
 using ll = long long;
 
-vector<int> Solution::maxset(vector<int> &A) {
+vector<int> maxset(vector<int> &A) {
     ll n = A.size();
     ll x=0, y=0, s=0, mx=0, my=0, ms=0;
     for(ll i=0;i<n;i++){
