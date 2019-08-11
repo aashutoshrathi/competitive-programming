@@ -23,43 +23,30 @@ using namespace std;	// Kyuki yahi mai-baap hai
 typedef pair <long, long> lpairs;
 typedef long long ll;
 
-tuple<ll, ll, ll> extended_gcd(ll a, ll b) {
-	if (a == 0)
-		return make_tuple(b, 0, 1);
+// void preprocess(ll arr[], ll n, vector<vector<ll> >& cnt) {
+//     ll i, j; 
+//     for (i = 0; i < 32; i++) { 
+//         cnt[i][0] = 0; 
+//         for (j = 0; j < n; j++) { 
+//             if (j > 0) { 
+//                 cnt[i][j] = cnt[i][j - 1]; 
+//             }
+//             if (arr[j] & (1 << i)) 
+//                 cnt[i][j]++; 
+//         }
+//     } 
+// }
 
-	ll gcd, x, y;
-	tie(gcd, x, y) = extended_gcd(b % a, a);
-
-	return make_tuple(gcd, (y - (b/a) * x), x);
-}
-
-ll gcd(ll a, ll b) {
-    if(a%b == 0) {
-        return b;
-    }
-    return gcd(b, a%b);
-}
-
-vector<int> primes;
-
-void SieveOfEratosthenes(int n) {
-    primes.clear();
-    bool prime[n+1];
-    memset(prime, true, sizeof(prime)); 
-  
-    for (int p=2; p*p<=n; p++) { 
-        if (prime[p] == true) { 
-            for (int i=p*p; i<=n; i += p) 
-                prime[i] = false; 
-        } 
-    } 
-  
-    for (int p=2; p<=n; p++) {
-       if (prime[p]) {
-           primes.push_back(p);
-       }
-    } 
-}
+// ll findXOR(ll L, ll R, const vector<vector<ll> > cnt) {
+//     ll ans = 0, noOfOnes, i; 
+//     for (i = 0; i < 32; i++) { 
+//         noOfOnes = cnt[i][R] - ((L > 0) ? cnt[i][L - 1] : 0); 
+//         if (noOfOnes & 1) { 
+//             ans += (1 << i); 
+//         } 
+//     }
+//     return ans;
+// }
 
 int main() {
     fast
@@ -69,23 +56,22 @@ int main() {
         ll n;
         cin >> n;
         ll a[n];
-        ll res = 0;
+
         for(ll i=0; i<n; i++) {
             cin >> a[i];
         }
 
+        ll res = 0;
         for(ll i=0; i<n-1; i++) {
             ll xorwa = a[i];
             for(ll j=i+1; j<n; j++) {
                 xorwa ^= a[j];
+                // cout << xorwa << endl;
                 if(xorwa == 0) {
-                    res += (1 << (j-i) - 1);
+                    res += (j-i);
                 }
             }
         }
-
-        // Create a set of triplets.
-        
         cout << res << endl;
     }
     return 0;
