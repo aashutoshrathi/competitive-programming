@@ -23,56 +23,36 @@ using namespace std;	// Kyuki yahi mai-baap hai
 typedef pair <long, long> lpairs;
 typedef long long ll;
 
-// void preprocess(ll arr[], ll n, vector<vector<ll> >& cnt) {
-//     ll i, j; 
-//     for (i = 0; i < 32; i++) { 
-//         cnt[i][0] = 0; 
-//         for (j = 0; j < n; j++) { 
-//             if (j > 0) { 
-//                 cnt[i][j] = cnt[i][j - 1]; 
-//             }
-//             if (arr[j] & (1 << i)) 
-//                 cnt[i][j]++; 
-//         }
-//     } 
-// }
-
-// ll findXOR(ll L, ll R, const vector<vector<ll> > cnt) {
-//     ll ans = 0, noOfOnes, i; 
-//     for (i = 0; i < 32; i++) { 
-//         noOfOnes = cnt[i][R] - ((L > 0) ? cnt[i][L - 1] : 0); 
-//         if (noOfOnes & 1) { 
-//             ans += (1 << i); 
-//         } 
-//     }
-//     return ans;
-// }
+ll cnt[2000020];
+ll sum[2000020];
+ll a[100010];
 
 int main() {
     fast
     ll t;
     cin >> t;
+    cnt[0] = 1;
+    sum[0] = 1;
     while(t--) {
         ll n;
+        ll s = 0, res = 0;
         cin >> n;
-        ll a[n];
-
-        for(ll i=0; i<n; i++) {
+        for(ll i=1; i<=n; ++i) {
             cin >> a[i];
+            s ^= a[i];
+            res += cnt[s]*i - sum[s];
+            ++cnt[s];
+            sum[s] += i+1;
         }
 
-        ll res = 0;
-        for(ll i=0; i<n-1; i++) {
-            ll xorwa = a[i];
-            for(ll j=i+1; j<n; j++) {
-                xorwa ^= a[j];
-                // cout << xorwa << endl;
-                if(xorwa == 0) {
-                    res += (j-i);
-                }
-            }
-        }
         cout << res << endl;
+
+        s=0;
+		for(int i=1;i<=n;++i) {
+			s^=a[i];
+			--cnt[s];
+			sum[s] -= i+1;
+		}
     }
     return 0;
 }
