@@ -32,6 +32,16 @@ int main() {
     }
     else {
         cout << "YES" << endl;
+        ll arr[2*n+1];
+        for(int i=1; i<=n; i++)
+            arr[i]=2*i-1;
+        for(int i=n+1; i<=2*n; i++)
+            arr[i]=2*(i-n);
+        for(int i=2; i<=n; i+=2)
+            swap(arr[i],arr[n+i]);
+        for(int i=1; i<=2*n; i++)
+            cout<<arr[i]<<" ";
+        cout << endl;
     }
     
     return 0;
