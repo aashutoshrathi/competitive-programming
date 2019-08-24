@@ -1,18 +1,18 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~ Aashutosh Rathi~~~~~~
-// ~~~~~~~~aashutoshrathi~~~~~~~~~~~
+// ~~~~~~~~aashutosh001~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
 // Use memcpy while copying matrix :D
 // o_O Never do calculation in if block -_- 
 // Use __builtin_popcount(z) to get set bit count of z
  
-#include <bits/stdc++.h> 	// Apne aap me sab kuch hai isme 
+#include <bits/stdc++.h>// Apne aap me sab kuch hai isme 
 #include <stdio.h>
 
-using namespace std;	// Kyuki yahi mai-baap hai
+using namespace std;    // Kyuki yahi mai-baap hai
  
-#define mod(x) 			x%1000000007
+#define mod(x)          x%1000000007
 #define MIN(n1, n2)     ((n1) > (n2) ? (n2) : (n1))
 #define MAX(n1, n2)     ((n1) > (n2) ? (n1) : (n2))
 #define MID(s, e)       (s+(e-s)/2)
@@ -24,19 +24,21 @@ typedef pair <long, long> lpairs;
 typedef long long ll;
 
 int main() {
-    fast
-    ll n;
-    cin >> n;
-    int bits[32];
-    memset(bits, 0, sizeof(bits));
-    ll a[n];
-    for(ll i=0; i<n; i++) {
-        cin >> a[i];
+    string s;
+    cin >> s;
+    ll x = s.size();
+    ll sum = 0;
+    ll nz = 0;
+    if(s == "0") {
+        cout << 0 << endl;
+        return 0;
     }
-
-    for(ll i=0; i<32; i++) {
-        bits[i] += a[i] && 1 << i;
+    for(ll i=0; i<x; i++) {
+        sum += s[i]-'0';
+        if(s[i] == '0') {
+            nz++;
+        }
     }
-    
+    cout << (x-1)/2 + 1 - (sum == 1 && nz%2 == 0) << endl;
     return 0;
 }

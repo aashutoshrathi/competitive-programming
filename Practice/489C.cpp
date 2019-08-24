@@ -48,10 +48,7 @@ int main() {
     ll helper;
     // Min part
     for(int i=0; i < m; i++) {
-        helper = MAX(0, sCopyOne-(9*(m-i-1)));
-        if(i==0) {
-            helper = MAX(1, sCopyOne-(9*(m-i-1)));
-        }
+        helper = MAX(i==0, sCopyOne-(9*(m-i-1)));
         cout << helper;
         sCopyOne -= helper;
     }
