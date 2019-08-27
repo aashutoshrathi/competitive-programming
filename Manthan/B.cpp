@@ -2,7 +2,7 @@
 // ~~~~~~~ Aashutosh Rathi~~~~~~
 // ~~~~~~~~aashutoshrathi~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// https://codeforces.com/problemset/problem/489/C
+// https://codeforces.com/contest/1208/problem/B
  
 // Use memcpy while copying matrix :D
 // o_O Never do calculation in if block -_- 
@@ -36,7 +36,53 @@ int main() {
     for(int i=0; i<t; i++) {
         cin >> a[i];
     }
+    int l = t;
+    
+    // Base Case
+    map<ll, ll> m;
+    int r = -1;
 
+    for(int i=0; i<t; i++) {
+        if(m[a[i]] > 0) {
+            l = i;
+            break;
+        } else {
+            m[a[i]]++;
+        }
+    }
+
+    if(l == t) {
+        cout << 0 << endl;
+        return 0;
+    }
+
+    m.clear();
+
+    for(int i=t-1; i>=0; i--) {
+        if(m[a[i]] > 0) {
+            r = i+1;
+            break;
+        } else {
+            m[a[i]]++;
+        }
+    }
+
+    m.clear();
+
+    int ans = r;
+    for(int i=0; i<l; i++) {
+        ll j = t - 1;
+        m[a[i]]++;
+        while(j >= r)
+        {
+            if(m.find(a[j]) != m.end())
+                break;
+            j--;
+        }
+        ans = MIN(ans, j - i);
+    }
+    cout << ans << endl;
+    
     return 0;
 }
 
