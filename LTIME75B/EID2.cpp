@@ -12,8 +12,8 @@
 
 using namespace std;	// Kyuki yahi mai-baap hai
 
-#define fj(a) for (ll i = 0; i < a; ++i)
-#define fi(a) for (ll j = 0; j < a; ++j)
+#define fj(a) for (ll j = 0; j < a; ++j)
+#define fi(a) for (ll i = 0; i < a; ++i)
 #define mod(x) 			x%1000000007
 #define MIN(n1, n2)     ((n1) > (n2) ? (n2) : (n1))
 #define MAX(n1, n2)     ((n1) > (n2) ? (n1) : (n2))
@@ -25,6 +25,8 @@ using namespace std;	// Kyuki yahi mai-baap hai
 #define fio ios::sync_with_stdio(false)
 typedef pair <long, long> lpairs;
 typedef long long ll;
+#define F "FAIR"
+#define NF "NOT FAIR"
 
 tuple<ll, ll, ll> extended_gcd(ll a, ll b) {
 	if (a == 0)
@@ -64,12 +66,42 @@ void SieveOfEratosthenes(int n) {
     } 
 }
 
+string solve(int a[], int c[]) {
+    fi(3) {
+        fj(3) {
+            if(a[i] == a[j]) {
+                if(c[i] != c[j]) {
+                    return NF;
+                }
+            }
+            else if(a[i] > a[j]) {
+                if(c[i] <= c[j]) {
+                    return NF;
+                }
+            }
+
+            else if(a[i] < a[j]) {
+                if(c[i] >= c[j]) {
+                    return NF;
+                }
+            }
+        }
+    }
+    return F;
+}
+
 int main() {
     tezzzzz
     ll t;
     cin >> t;
     while(t--) {
-        
+        int a[3], c[3];
+        fi(3)
+            cin >> a[i];
+        fi(3)
+            cin >> c[i];
+        cout << solve(a ,c) << endl;       
     }
+
     return 0;
 }
