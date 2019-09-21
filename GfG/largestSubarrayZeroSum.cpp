@@ -1,5 +1,7 @@
 #include <iostream>
-#include <vector>
+#include <bits/stdc++.h> 	// Apne aap me sab kuch hai isme 
+#include <stdio.h>
+
 using namespace std;
 
 int maxLen(int arr[], int n){

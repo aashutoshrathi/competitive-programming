@@ -16,6 +16,7 @@ using namespace std;	// Kyuki yahi mai-baap hai
 #define MIN(n1, n2)     ((n1) > (n2) ? (n2) : (n1))
 #define MAX(n1, n2)     ((n1) > (n2) ? (n1) : (n2))
 #define MID(s, e)       (s+(e-s)/2)
+#define endl "\n"
 #define fast fin; fout; fio;
 #define fin cin.tie(NULL)
 #define fout cout.tie(NULL)
