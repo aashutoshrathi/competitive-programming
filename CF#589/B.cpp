@@ -42,37 +42,40 @@ ll power(ll x, ll y, ll p) {
 
 int main() {
     tezzzzz
-    int h, w;
+    int h, w, flag=0;
     cin >> h >> w;
-    ll r[h], c[w];
-    fi(h)
-        cin >> r[i];
-    fi(w)
-        cin >> c[i];
+    
+    int mat[h][w];
+    memset(mat,0,sizeof(mat));
 
-    ll cnt = 0;
-    for(int i=0; i<h; i++) {
-        ll rc = 0;
-        for(int j=0; j<w; j++) {
-            if(j>r[i] && i>c[j]) {
-                cnt++;
-                // cout << i << " " << j << endl;
-            }
-            else if((i < c[j]) ^ (j < r[i])) {
-                cout << 0 << " " << i << " " << j << endl;
-                return 0;
-            }
-        }
-    }
+    for(int i = 0; i < h; i++) {
+		int r;
+		cin >> r;
+		for(int j = 0; j < r; j++) 
+            mat[i][j] |= 1;
+		if(r < w) mat[i][r] |= 2;
+	}
 
-    ll res;
-    if(cnt == 0) {
-        res = 0;
-    } else{
-        res = power(2, cnt, MOD);
-    }
-    // cout << cnt << endl;
-    cout << res << endl;
+	for(int i = 0; i < w; i++) {
+		int c;
+		cin >> c;
+		for(int j = 0; j < c; j++) 
+            mat[j][i] |= 1;
+		if(c < h) mat[c][i] |= 2;
+	}
+
+	int ans = 1;
+	for(int i = 0; i < h; i++) {
+		for(int j = 0; j < w; j++) {
+			if(mat[i][j] == 3) {
+				ans *= 0;
+			}
+			if(mat[i][j] == 0) {
+				ans = (ans*2)%MOD;
+			}
+		}
+	}
+	cout << ans%MOD << '\n';
     
     return 0;
 }
