@@ -22,6 +22,7 @@ public:
             }
         }
         
+        // This is to break string into array separated on every space.
         istringstream iss(paragraph);
         vector<string> results((istream_iterator<string>(iss)),
                                  istream_iterator<string>());
