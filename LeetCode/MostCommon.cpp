@@ -5,39 +5,32 @@ using namespace std;
 class Solution {
 public:
     string mostCommonWord(string paragraph, vector<string>& banned) {
-        unordered_set<string> banset;
-        for(auto i: banned) {
-            banset.insert(i);
-        }
-        
         unordered_map<string, int> m;
-        
-        
-        for (int i = 0, len = paragraph.size(); i < len; i++) {
-            if (ispunct(paragraph[i])) {
-                paragraph[i] = ' ';
+        string s = "";
+        for(auto &i: paragraph) {
+            i = tolower(i);
+            if('a' <= i and i <= 'z') {
+                s.push_back(i);
+            } else {
+                if(!s.empty()) {
+                    ++m[s];
+                    s = "";
+                }
             }
-            else if(isupper(paragraph[i])) {
-                paragraph[i] += ('z'-'Z');
-            }
-        }
-        
-        // This is to break string into array separated on every space.
-        istringstream iss(paragraph);
-        vector<string> results((istream_iterator<string>(iss)),
-                                 istream_iterator<string>());
-        
-        for(auto i: results) {
-            if(banset.find(i) == banset.end())
-                m[i]++;
         }
 
+        // Important when banned array is empty        
+        if(!s.empty()) {
+            ++m[s];
+            s = "";
+        }
         
-        string res = "";
-        int mx = 0;
-        for(auto i: m) {
-            if(i.second > mx) {
-                mx = i.second;
+        for(auto &i: banned)
+            m[i] = 0;
+        
+        string res= (*(m.begin())).first;
+        for(auto &i: m) {
+            if(i.second > m[res]) {
                 res = i.first;
             }
         }
