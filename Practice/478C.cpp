@@ -47,7 +47,19 @@ int main() {
         cout << ans << endl;
         return 0;
     } else {
-        
+        while((lT[0] >= 1 && lT[1] > 1) || (lT[1] >= 1 && lT[0] > 1)) {
+            if(lT[0] >= lT[1]) {
+                int bal = min(lT[0]/2, lT[1]);
+                lT[0] -= 2*bal;
+                lT[1] -= bal;
+                ans++;
+            } else {
+                int bal = min(lT[1]/2, lT[0]);
+                lT[0] -= bal;
+                lT[1] -= 2*bal;
+                ans++;
+            }
+        }
     }
     cout << ans << endl;
     return 0;
