@@ -19,7 +19,6 @@
 // long long product(long long x,long long y){return x*y;}
 // SegmentTree < long long > rangeProductQueries(dataVector,1,product);
 
-///author : kartik8800
 #ifndef SEGMENTTREE_H
 #define SEGMENTTREE_H
 #define left(i) (2*i + 1)
