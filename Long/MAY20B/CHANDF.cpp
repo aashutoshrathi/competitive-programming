@@ -27,6 +27,7 @@ using namespace std;	// Kyuki yahi mai-baap hai
 #define fio ios::sync_with_stdio(false)
 typedef pair <long, long> lpairs;
 typedef long long ll;
+typedef unsigned long long ull;
 #define endl "\n"
 
 int main() {
@@ -51,12 +52,25 @@ int main() {
                 if(l == r) {
                     z = r;
                 } else {
-                    ll maxwa = INT_MIN;
-                    for(ll i=l; i<=r; i++) {
-                        ll res = (x&i)*(y&i);
-                        if(res > maxwa) {
-                            // cout << res << ": " << i << endl;
-                            maxwa = res;
+                    z = x|y;
+                    // cout << "z: " << z << endl;
+                    bitset<64> b(r); 
+                    vector<ull> to_iterate;
+                    for(int i=0; i < 64; i++) {
+                        if(b[i]) {
+                            b.flip(i);
+                            ull p = b.to_ullong()&z;
+                            // cout << b.to_ullong() << endl;
+                            to_iterate.push_back(p);
+                        }
+                    }
+                    uint64_t temp_max = 0;
+                    for(ull i: to_iterate) {
+                        // cout << i << ", " << x << ", " << y << endl;
+                        uint64_t tt = (x&i)*(y&i);
+                        cout << "V:" << tt << endl;
+                        if(tt >= temp_max) {
+                            temp_max = tt;
                             z = i;
                         }
                     }
