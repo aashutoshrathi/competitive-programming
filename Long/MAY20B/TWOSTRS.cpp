@@ -43,13 +43,13 @@ int main() {
         string a, b;
         ll n;
         cin >> a >> b >> n;
-        unordered_map<string, int> s;
+        unordered_map<string, int> beauty;
         
         fi(n) {
             string u;
             int v;
             cin >> u >> v;
-            s[u] = v;
+            beauty[u] = v;
         }
 
         
