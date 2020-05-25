@@ -1,5 +1,5 @@
 '''
-FooBar Level 1
+FooBar Level 1 P1
 Solved in 1Hr (as was literally confused if I needs harcode stuff)
 returns braille ascii for a english char
 '''
