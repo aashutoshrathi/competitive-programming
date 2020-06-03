@@ -50,22 +50,81 @@ Output:
     9
 '''
 
-import math
+
+def sign(a) -> bool:
+    '''
+    signum function
+    '''
+    return (a > 0) - (a < 0)
 
 
-def euclid_distance(src, dst):
-    return math.sqrt((src[0]-dst[0])**2 + (src[1]-dst[1])**2)
+def euclid_distance(src, dst=[0, 0]) -> int:
+    '''
+    returns euclid_distance of src from dst.
+    If dst is not given it is treated as origin
+    '''
+    return sum([(src[i]-dst[i])**2 for i in range(2)])
 
 
-def solution(dimensions, your_position, guard_position, distance):
-    direct_distance = euclid_distance(your_position, guard_position)
-    ways = 0
-    if direct_distance <= distance:
-        ways += 1
-    
+def oouch(dim, you, guard, pt) -> bool:
+    '''
+    returns whether your beams will
+    hurt yourself before the guard
+    '''
+    if pt[0]*pt[1] == 0:  # i.e. one of coordinate is 0
+        # and they go opposite
+        direction_sum = sum(
+            [sign((you[i]-guard[i])*pt[0]) == -1 for i in range(2)])
+        return direction_sum <= 0
+    return False
 
 
-    return ways
+def slope(pt):
+    '''
+    return slope of bearing vector
+    '''
+    if pt[0] == 0:
+        return 'inf'
+    div = pt[1]/pt[0]
+    if sign(pt[0]) < 1 and sign(pt[1]) < 1:
+        return 'b{}'.format(div)
+    if sign(pt[0]) < 1:
+        return 'd{}'.format(div)
+    if sign(pt[1]) == -1:
+        return 'n{}'.format(div)
+    return div
+
+
+def reflect(a, b) -> bool:
+    '''
+    returns position of beam after reflection in room
+    '''
+    res = a % b
+    return b - res if (a//b) % 2 else res
+
+
+def reachable(dim, you, guard, pt) -> bool:
+    '''
+    returns whether or not beam reaches guard
+    '''
+    reach = [reflect(you[i]+pt[i], dim[i]) == guard[i] for i in range(2)]
+    if sum(reach) == 2:
+        return not oouch(dim, you, guard, pt)
+    return False
+
+
+def solution(dim, you, guard, distance):
+    d_two = distance**2
+    pseudo_valid_pts = []
+    for i in range(-dim[0], dim[0]+1):
+        if i**2 < d_two:
+            for j in range(-dim[1], dim[1]+1):
+                pt = [i, j]
+                if euclid_distance(pt) <= d_two and reachable(dim, you, guard, pt):
+                    print(pt)
+                    pseudo_valid_pts.append(slope(pt))
+    print(set(pseudo_valid_pts))
+    return len(set(pseudo_valid_pts))
 
 
 if __name__ == "__main__":
