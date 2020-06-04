@@ -22,7 +22,8 @@ can fire to hit the elite guard, given the maximum distance that the beam can tr
 The room has integer dimensions [1 < x_dim <= 1250, 1 < y_dim <= 1250]. You and the 
 elite guard are both positioned on the integer lattice at different distinct positions (x, y) 
 inside the room such that [0 < x < x_dim, 0 < y < y_dim]. Finally, the maximum distance 
-that the beam can travel before becoming harmless will be given as an integer 1 < distance <= 10000.
+that the beam can travel before becoming harmless will be given as an 
+integer 1 < distance <= 10000.
 
 For example, if you and the elite guard were positioned in a room with dimensions [3, 2],
 your_position [1, 1], guard_position [2, 1], and a maximum shot distance of 4, 
@@ -50,6 +51,8 @@ Output:
     9
 '''
 
+TWO = 2
+
 
 def sign(a) -> bool:
     '''
@@ -63,7 +66,7 @@ def euclid_distance(src, dst=[0, 0]) -> int:
     returns euclid_distance of src from dst.
     If dst is not given it is treated as origin
     '''
-    return sum([(src[i]-dst[i])**2 for i in range(2)])
+    return sum([(src[i]-dst[i])**TWO for i in range(TWO)])
 
 
 def oouch(dim, you, guard, pt) -> bool:
@@ -74,7 +77,7 @@ def oouch(dim, you, guard, pt) -> bool:
     if pt[0]*pt[1] == 0:  # i.e. one of coordinate is 0
         # and they go opposite
         direction_sum = sum(
-            [sign((you[i]-guard[i])*pt[0]) == -1 for i in range(2)])
+            [sign((guard[i]-you[i])*pt[i]) == -1 for i in range(TWO)])
         return direction_sum <= 0
     return False
 
@@ -86,38 +89,39 @@ def slope(pt):
     if pt[0] == 0:
         return 'inf'
     div = pt[1]/pt[0]
+    sym = ''
     if sign(pt[0]) < 1 and sign(pt[1]) < 1:
-        return 'b{}'.format(div)
-    if sign(pt[0]) < 1:
-        return 'd{}'.format(div)
-    if sign(pt[1]) == -1:
-        return 'n{}'.format(div)
-    return div
+        sym = 'b'
+    elif sign(pt[0]) < 1:
+        sym = 'd'
+    elif sign(pt[1]) == -1:
+        sym = 'n'
+    return '{}{}'.format(sym, div)
 
 
-def reflect(a, b) -> bool:
+def reflect(a, b) -> int:
     '''
     returns position of beam after reflection in room
     '''
     res = a % b
-    return b - res if (a//b) % 2 else res
+    return b - res if (a//b) % TWO else res
 
 
 def reachable(dim, you, guard, pt) -> bool:
     '''
     returns whether or not beam reaches guard
     '''
-    reach = [reflect(you[i]+pt[i], dim[i]) == guard[i] for i in range(2)]
-    if sum(reach) == 2:
+    reach = [reflect(pt[i]+you[i], dim[i]) == guard[i] for i in range(TWO)]
+    if sum(reach) == TWO:
         return not oouch(dim, you, guard, pt)
     return False
 
 
 def solution(dim, you, guard, distance):
-    d_two = distance**2
+    d_two = distance**TWO
     pseudo_valid_pts = []
     for i in range(-dim[0], dim[0]+1):
-        if i**2 < d_two:
+        if i**TWO <= d_two:
             for j in range(-dim[1], dim[1]+1):
                 pt = [i, j]
                 if euclid_distance(pt) <= d_two and reachable(dim, you, guard, pt):
