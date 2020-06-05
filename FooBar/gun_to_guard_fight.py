@@ -52,87 +52,90 @@ Output:
 '''
 
 TWO = 2
+X_AXIS = Y_AXIS = 0
 
 
-def sign(a) -> bool:
+def unique_hash(pt):
     '''
-    signum function
+    return unique value for pt
     '''
-    return (a > 0) - (a < 0)
+    return '{}#{}'.format(pt[0], pt[1])
 
 
-def euclid_distance(src, dst=[0, 0]) -> int:
+def reflect(point, mirror):
     '''
-    returns euclid_distance of src from dst.
-    If dst is not given it is treated as origin
+    return reflection of point 
+    (normally with vertical axes and 0)
     '''
-    return sum([(src[i]-dst[i])**TWO for i in range(TWO)])
+    return TWO*mirror - point
 
 
-def oouch(dim, you, guard, pt) -> bool:
-    '''
-    returns whether your beams will
-    hurt yourself before the guard
-    '''
-    if pt[0]*pt[1] == 0:  # i.e. one of coordinate is 0
-        # and they go opposite
-        direction_sum = sum(
-            [sign((guard[i]-you[i])*pt[i]) == -1 for i in range(TWO)])
-        return direction_sum <= 0
-    return False
-
-
-def slope(pt):
-    '''
-    return slope of bearing vector
-    '''
-    if pt[0] == 0:
-        return 'inf'
-    div = pt[1]/pt[0]
-    sym = ''
-    if sign(pt[0]) < 1 and sign(pt[1]) < 1:
-        sym = 'b'
-    elif sign(pt[0]) < 1:
-        sym = 'd'
-    elif sign(pt[1]) == -1:
-        sym = 'n'
-    return '{}{}'.format(sym, div)
-
-
-def reflect(a, b) -> int:
-    '''
-    returns position of beam after reflection in room
-    '''
-    res = a % b
-    return b - res if (a//b) % TWO else res
-
-
-def reachable(dim, you, guard, pt) -> bool:
-    '''
-    returns whether or not beam reaches guard
-    '''
-    reach = [reflect(pt[i]+you[i], dim[i]) == guard[i] for i in range(TWO)]
-    if sum(reach) == TWO:
-        return not oouch(dim, you, guard, pt)
-    return False
-
-
-def solution(dim, you, guard, distance):
+def solution(dimensions, your_position, guard_position, distance):
     d_two = distance**TWO
 
-    if euclid_distance(you, guard) > d_two:
+    def where_we_began(dst, src=your_position):
+        '''
+        returns whether this is same point
+        as where we began.
+        '''
+        return sum([(dst[i] == src[i]) for i in range(TWO)]) >= 1
+
+    def euclid_distance(dst, src=your_position):
+        '''
+        returns euclid_distance of src from dst.
+        If dst is not given it is treated as origin
+        '''
+        return sum([(dst[i]-src[i])**TWO for i in range(TWO)])
+
+    def reachable(a):
+        '''
+        returns whether or not beam reaches guard
+        '''
+        return euclid_distance(a) <= d_two
+
+    def get_all_reflections(point):
+        '''
+        returns position of beam after reflection in room
+        '''
+        refs = []
+        refs.append((reflect(point[0], X_AXIS), point[1]))
+        refs.append((point[0], reflect(point[1], Y_AXIS)))
+        refs.append((reflect(point[0], dimensions[0]), point[1]))
+        refs.append((point[0], reflect(point[1], dimensions[1])))
+        return refs
+
+    def visited(a):
+        '''
+        returns whether the point is already counted
+        '''
+        return unique_hash(a) in history
+
+    def visit(a):
+        '''
+        visits a point
+        '''
+        history.add(unique_hash(a))
+
+    # Straight Line is shortest distance
+    if not reachable(guard_position):
         return 0
 
-    pseudo_valid_pts = []
-    for i in range(-dim[0], dim[0]+1):
-        if i**TWO <= d_two:
-            for j in range(-dim[1], dim[1]+1):
-                pt = [i, j]
-                if euclid_distance(pt) <= d_two and reachable(dim, you, guard, pt):
-                    print(pt)
-                    pseudo_valid_pts.append(slope(pt))
-    print(set(pseudo_valid_pts))
-    return len(set(pseudo_valid_pts))
+    # Contains hash separated coordinates which are visited
+    # unordered was much missed
+    history = set()
+
+    # since the valid ones are in history
+    pseudo_valid_pts_q = [guard_position]
+
+    while len(pseudo_valid_pts_q):
+        curr_pt = pseudo_valid_pts_q.pop(0)
+        if reachable(curr_pt) and not visited(curr_pt):
+            visit(curr_pt)
+            for rfl in get_all_reflections(curr_pt):
+                if not where_we_began(rfl):
+                    pseudo_valid_pts_q.append(rfl)
+
+    return len(history)
 
 
 if __name__ == "__main__":
