@@ -52,7 +52,6 @@ Output:
 '''
 
 TWO = 2
-X_AXIS = Y_AXIS = 0
 
 
 def unique_hash(pt):
@@ -62,25 +61,25 @@ def unique_hash(pt):
     return '{}#{}'.format(pt[0], pt[1])
 
 
-def reflect(point, mirror):
+def reflect(pt, mirror):
     '''
     return reflection of point 
     (normally with vertical axes and 0)
     '''
-    return TWO*mirror - point
+    return mirror*TWO - pt
 
 
-def solution(dimensions, your_position, guard_position, distance):
+def solution(dim, you, guard, distance):
     d_two = distance**TWO
 
-    def where_we_began(dst, src=your_position):
+    def not_me(dst, src=you):
         '''
         returns whether this is same point
         as where we began.
         '''
-        return sum([(dst[i] == src[i]) for i in range(TWO)]) >= 1
+        return (dst[0] != src[0]) and (dst[1] != src[1])
 
-    def euclid_distance(dst, src=your_position):
+    def euclid_distance(dst, src=you):
         '''
         returns euclid_distance of src from dst.
         If dst is not given it is treated as origin
@@ -91,17 +90,21 @@ def solution(dimensions, your_position, guard_position, distance):
         '''
         returns whether or not beam reaches guard
         '''
-        return euclid_distance(a) <= d_two
+        return d_two >= euclid_distance(a)
+
+    # Contains hash separated coordinates which are visited
+    # unordered was much missed
+    history = set()
 
     def get_all_reflections(point):
         '''
         returns position of beam after reflection in room
         '''
         refs = []
-        refs.append((reflect(point[0], X_AXIS), point[1]))
-        refs.append((point[0], reflect(point[1], Y_AXIS)))
-        refs.append((reflect(point[0], dimensions[0]), point[1]))
-        refs.append((point[0], reflect(point[1], dimensions[1])))
+        refs.append((reflect(point[0], 0), point[1]))
+        refs.append((point[0], reflect(point[1], 0)))
+        refs.append((reflect(point[0], dim[0]), point[1]))
+        refs.append((point[0], reflect(point[1], dim[1])))
         return refs
 
     def visited(a):
@@ -116,31 +119,35 @@ def solution(dimensions, your_position, guard_position, distance):
         '''
         history.add(unique_hash(a))
 
-    # Straight Line is shortest distance
-    if not reachable(guard_position):
-        return 0
-
-    # Contains hash separated coordinates which are visited
-    # unordered was much missed
-    history = set()
-
     # since the valid ones are in history
-    pseudo_valid_pts_q = [guard_position]
-
+    pseudo_valid_pts_q = []
+    if reachable(guard):
+        pseudo_valid_pts_q.append(guard)
     while len(pseudo_valid_pts_q):
         curr_pt = pseudo_valid_pts_q.pop(0)
         if reachable(curr_pt) and not visited(curr_pt):
             visit(curr_pt)
             for rfl in get_all_reflections(curr_pt):
-                if not where_we_began(rfl):
+                if not_me(rfl):
                     pseudo_valid_pts_q.append(rfl)
 
     return len(history)
 
 
+
 if __name__ == "__main__":
-    dimensions = list(map(int, input().strip().split()))
-    your_position = list(map(int, input().strip().split()))
-    guard_position = list(map(int, input().strip().split()))
-    distance = int(input())
+    # dimensions = [2, 5]
+    # your_position = [1, 2]
+    # guard_position = [1, 4]
+    # distance = 11
+
+    # dimensions = [300, 275]
+    # your_position = [150, 150]
+    # guard_position = [185, 100]
+    # distance = 500
+
+    dimensions = [3, 2]
+    your_position = [1, 1]
+    guard_position = [2, 1]
+    distance = 4
     print(solution(dimensions, your_position, guard_position, distance))
