@@ -119,6 +119,10 @@ def reachable(dim, you, guard, pt) -> bool:
 
 def solution(dim, you, guard, distance):
     d_two = distance**TWO
+
+    if euclid_distance(you, guard) > d_two:
+        return 0
+
     pseudo_valid_pts = []
     for i in range(-dim[0], dim[0]+1):
         if i**TWO <= d_two:
