@@ -50,103 +50,127 @@ solution.solution([300,275], [150,150], [185,100], 500)
 Output:
     9
 '''
-from math import atan2
+from math import atan2, hypot
+
 TWO = 2
+GUARD = 42
+YOU = 1337
+IDS = [YOU, GUARD]
+PHASE_CHANGERS = [[1, -1], [-1, -1], [-1, 1]]
 
 
-def sign(a):
-    '''
-    signum function
-    '''
-    return (a > 0) - (a < 0)
-
-
-def gcd(x, y):
-    '''
-    Fast GCD
-    '''
-    while(y):
-        x, y = y, x % y
-    return x
-
-
-def reflect(pt, mirror):
+def reflect(wall, pt):
     '''
     return reflection of point
     (normally with vertical axes and 0)
     '''
-    return mirror*TWO - pt
+    return (wall - pt) + wall
 
 
 def solution(dim, you, guard, distance):
-    d_two = distance**TWO
+    PLAYERS = [you, guard]
 
-    def unique_hash(pt):
+    def slope(pt):
         '''
         return slope of bearing vector
         '''
-        return atan2(you[0]-pt[0], you[1]-pt[1])
+        return atan2(pt[1]-you[1], pt[0]-you[0])
 
-    def not_me(dst, src=you):
-        '''
-        returns whether this is same point
-        as where we began.
-        '''
-        return (dst[0] != src[0]) and (dst[1] != src[0])
-
-    def euclid_distance(dst, src=you):
+    def euclid_distance(dst):
         '''
         returns euclid_distance of src from dst.
         If dst is not given it is treated as origin
         '''
-        return sum([(dst[i]-src[i])**TWO for i in range(TWO)])
+        return hypot((dst[0]-you[0]), (dst[1]-you[1]))
 
     def reachable(a):
         '''
         returns whether or not beam reaches guard
         '''
-        return d_two >= euclid_distance(a)
+        return distance >= euclid_distance(a) > 0
 
-    # Contains hash separated coordinates which are visited
-    # unordered was much missed
-    history = set()
+    def get_in_all_quadrants(bunch):
+        '''
+        Generates all combinations of 
+        point in others 3 quads
+        '''
+        points = []
+        for k in range(len(PHASE_CHANGERS)):
+            for j in range(len(bunch)):
+                point = [bunch[j][i] * PHASE_CHANGERS[k][i]
+                         for i in range(TWO)]
+                point.append(bunch[j][2])
+                if reachable(point):
+                    points.append(point)
+        return points
 
-    def get_all_reflections(point):
+    def get_all_reflections():
         '''
         returns position of beam after reflection in room
+        and also multi-roomiverse we created
         '''
-        refs = []
-        refs.append((reflect(point[0], 0), point[1]))
-        refs.append((point[0], reflect(point[1], 0)))
-        refs.append((reflect(point[0], dim[0]), point[1]))
-        refs.append((point[0], reflect(point[1], dim[1])))
-        return refs
+        room_replicas = [((you[i] + distance + 1) // dim[i]
+                          ) + 1 for i in range(TWO)]
+
+        cx = [[] for _ in range(TWO)]
+        cy = [[] for _ in range(TWO)]
+
+        for i in range(0, room_replicas[0]):
+            y_list = [[], []]
+            curr_x = [you[0], guard[0]]
+
+            # Generate all points parallel to Y Axis
+            wall_x = dim[0] * i
+            for k in range(TWO):
+                if len(cx[k]):
+                    curr_x[k] = reflect(wall_x, cx[k][-1][0])
+                cx[k].append([curr_x[k], PLAYERS[k][1], IDS[k]])
+
+            # Generate all points parallel to X Axis
+            # and mix them well
+            for j in range(1, room_replicas[-1]):
+                wall_y = dim[1] * j
+                curr_y = [0, 0]
+
+                for k in range(TWO):
+                    pt = PLAYERS[k][1]
+                    if len(y_list[k]):
+                        pt = y_list[k][-1]
+
+                    curr_y[k] = reflect(wall_y, pt)
+                    y_list[k].append(curr_y[k])
+                    cy[k].append([curr_x[k], curr_y[k], IDS[k]])
+
+        upper_pts = cx[0] + cx[1] + cy[0] + cy[1]
+        return upper_pts + get_in_all_quadrants(upper_pts)
+
+    # Contains slope of point visited in radians
+    # unordered was much missed
+    reflections = get_all_reflections()
+    tracker = dict()
 
     def visited(a):
         '''
         returns whether the point is already counted
         '''
-        return unique_hash(a) in history
+        return slope(a) in tracker
 
-    def visit(a):
+    def has_blocking_target(point):
         '''
-        visits a point
+        returns whether this point is
+        blocking some other target in a good way
         '''
-        history.add(unique_hash(a))
+        return visited(point) and tracker[slope(point)][1] > euclid_distance(point)
 
-    # since the valid ones are in history
-    pseudo_valid_pts_q = []
-    if reachable(guard):
-        pseudo_valid_pts_q.append(guard)
-    while len(pseudo_valid_pts_q):
-        curr_pt = pseudo_valid_pts_q.pop(0)
-        if reachable(curr_pt) and not visited(curr_pt):
-            visit(curr_pt)
-            for rfl in get_all_reflections(curr_pt):
-                if not_me(rfl):
-                    pseudo_valid_pts_q.append(rfl)
-    # print(history)
-    return len(history)
+    # First visit all our own reflections
+    # and also let's visit targets, kill'em all
+    # Unless it kills you
+
+    for i in reflections:
+        if reachable(i) and (not visited(i) or has_blocking_target(i)):
+            tracker[slope(i)] = [i, euclid_distance(i)]
+
+    return sum([(tracker[i][0][2] == GUARD) for i in tracker])
 
 
 if __name__ == "__main__":
@@ -155,18 +179,39 @@ if __name__ == "__main__":
     guard_position = [1, 4]
     distance = 11
 
-    # dimensions = [300, 275]
-    # your_position = [150, 150]
-    # guard_position = [185, 100]
-    # distance = 500
+    print(solution(dimensions, your_position, guard_position, distance), 27)
 
-    # dimensions = [3, 2]
-    # your_position = [1, 1]
-    # guard_position = [2, 1]
-    # distance = 4
+    dimensions = [300, 275]
+    your_position = [150, 150]
+    guard_position = [185, 100]
+    distance = 500
 
-    # dimensions = [23,10]
-    # your_position = [6, 4]
-    # guard_position = [3,2]
-    # distance = 23
-    print(solution(dimensions, your_position, guard_position, distance))
+    print(solution(dimensions, your_position, guard_position, distance), 9)
+
+    dimensions = [3, 2]
+    your_position = [1, 1]
+    guard_position = [2, 1]
+    distance = 4
+
+    print(solution(dimensions, your_position, guard_position, distance), 7)
+
+    dimensions = [23, 10]
+    your_position = [6, 4]
+    guard_position = [3, 2]
+    distance = 23
+
+    print(solution(dimensions, your_position, guard_position, distance), 8)
+
+    dimensions = [1250, 1250]
+    your_position = [1000, 1000]
+    guard_position = [500, 400]
+    distance = 10000
+
+    print(solution(dimensions, your_position, guard_position, distance), 196)
+
+    dimensions = [10, 10]
+    your_position = [4, 4]
+    guard_position = [3, 3]
+    distance = 5000
+
+    print(solution(dimensions, your_position, guard_position, distance), 739323)

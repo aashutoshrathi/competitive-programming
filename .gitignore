@@ -18,3 +18,4 @@ XDG_CACHE_HOME/
 *.out
 *.exe
 .vscode/
+test.py
