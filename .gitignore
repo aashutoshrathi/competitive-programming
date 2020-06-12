@@ -1,3 +1,8 @@
+# Ignore extension less files
+*
+!/**/
+!*.*
+
 # Ignore Mac system files
 .DS_store
 
@@ -18,3 +23,4 @@ XDG_CACHE_HOME/
 *.out
 *.exe
 .vscode/
+*.plist
