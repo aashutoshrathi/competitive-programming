@@ -10,14 +10,17 @@ public:
         iota(digs.begin(), digs.end(), 1);
         
         string res = "";
-        
+        int j = n;
+        int fact = factorial(n);
         while(digs.size()) {
             if(n == 1) {
                 res += to_string(digs[0]);
                 digs.pop_back();
                 continue;
             }
-            int fact = factorial(n-1);
+            fact = fact/j;
+            j--;
+            
             int i = k/fact - (k%fact == 0);
             
             res += to_string(digs[i]);
@@ -29,4 +32,3 @@ public:
         return res;
     }
 };
-
