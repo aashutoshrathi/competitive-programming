@@ -77,13 +77,11 @@ void pop_front(std::vector<T>& vec) {
     vec.erase(vec.begin());
 }
 
-unordered_map<ll, vector<ll> > adj;
-
-void doDfs(ll v, vector<bool>& vis) { 
+void doDfs(ll v, vector<bool>& vis, unordered_map<ll, vector<ll> >& adj) { 
     vis[v] = 1;
     for (ll i=0; i<adj[v].size(); i++) 
         if (!vis[adj[v][i]])
-            doDfs(adj[v][i], vis);
+            doDfs(adj[v][i], vis, adj);
 }
 
 int main() {
@@ -96,17 +94,19 @@ int main() {
         ll res = 0;
 
         // make adjancency list
+        unordered_map<ll, vector<ll> > adj;
         fi(m) {
             ll u, v;
             cin >> u >> v;
             adj[u].push_back(v);
+            // adj[v].push_back(u);
         }
 
         // now DFS 
         vector<bool> vis(n+1, 0);
         for(int i=1; i<=n; i++) {
             if(!vis[i]) {
-                doDfs(i, vis);
+                doDfs(i, vis, adj);
                 res++;
             }
         }
