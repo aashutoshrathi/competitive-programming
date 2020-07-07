@@ -71,10 +71,87 @@ finished editing your code, use submit [file] to submit your answer. If your
 solution passes the test cases, it will be removed from your home folder.
 '''
 
+from fractions import gcd
 
-def solution(banana_list):
+
+def infinite_loop(guard_one, guard_two):
+    '''
+    returns if guards go in infinite bets
+    '''
+    val = (guard_one+guard_two)//gcd(guard_one, guard_two)
+    return val & (val - 1)
+
+
+def solution(banana):
     '''
     returns min number of guards that will be free
     Takes bananas as input array
     '''
-    return len(banana_list)
+    leng = len(banana)
+    graph = {i: [] for i in range(leng)}
+    to_iterate = list(range(leng))
+
+    def connect():
+        # Connect Guards who can play infinte games
+        for i in range(leng-1):
+            for j in range(i+1, leng):
+                if infinite_loop(banana[i], banana[j]):
+                    graph[i].append(j)
+                    graph[j].append(i)
+
+    def connection_add_remove(t_set, ways, i, add):
+        if add:
+            t_set.add((ways[i], ways[i+1]))
+            t_set.add((ways[i+1], ways[i]))
+        else:
+            t_set.remove((ways[i], ways[i+1]))
+            t_set.remove((ways[i+1], ways[i]))
+
+    def hopcroft_karp():
+        has_way = True
+        while has_way:
+            has_way = False
+            for itr in to_iterate:
+                check = False
+                curr = itr
+                marked = set()
+                ways = list()
+
+                while True:
+                    marked.add(curr)
+
+                    for guard in graph.get(curr, []):
+                        apart = (curr, guard) in part
+                        matched = (curr, guard) in matches
+                        if guard not in marked and (not check and apart) or (check and matched):
+                            ways.append(curr)
+                            ways.append(guard)
+                            break
+
+                    if not ways:
+                        break
+
+                    if ways[-1] != itr and ways[-1] in to_iterate:
+                        has_way = True
+                        for i in range(len(ways) - 1):
+                            condition = (ways[i], ways[i + 1]) in matches
+                            connection_add_remove(
+                                matches, ways, i, not condition)
+                            connection_add_remove(
+                                part, ways, i, condition)
+
+                        to_iterate.remove(ways[-1])
+                        to_iterate.remove(ways[0])
+                        break
+
+                    curr = ways.pop()
+                    check = not check
+
+        return len(to_iterate)
+
+    connect()
+
+    part = set([(i, j) for i in graph for j in graph[i]])
+    matches = set()
+
+    return hopcroft_karp()
