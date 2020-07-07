@@ -112,7 +112,7 @@ def solution(banana):
         while has_way:
             has_way = False
             for itr in to_iterate:
-                check = False
+                flag = False
                 curr = itr
                 marked = set()
                 ways = list()
@@ -121,9 +121,9 @@ def solution(banana):
                     marked.add(curr)
 
                     for guard in graph.get(curr, []):
-                        apart = (curr, guard) in part
-                        matched = (curr, guard) in matches
-                        if guard not in marked and (not check and apart) or (check and matched):
+                        if guard in marked:
+                            continue
+                        if (not flag and (curr, guard) in part) or (flag and (curr, guard) in matches):
                             ways.append(curr)
                             ways.append(guard)
                             break
@@ -140,12 +140,12 @@ def solution(banana):
                             connection_add_remove(
                                 part, ways, i, condition)
 
-                        to_iterate.remove(ways[-1])
                         to_iterate.remove(ways[0])
+                        to_iterate.remove(ways[-1])
                         break
 
                     curr = ways.pop()
-                    check = not check
+                    flag = not flag
 
         return len(to_iterate)
 
