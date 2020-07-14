@@ -86,7 +86,8 @@ int main() {
     list<lpairs> *adj = new list<lpairs>[n+1];
     for(int i=0; i<m; i++) {
         ll u, v, w;
-        // adj[v].push_back(make_pair(u, w));
+        cin >> u >> v >> w;
+        adj[v].push_back(make_pair(u, w));
         adj[u].push_back(make_pair(v, w));
     }
 
@@ -101,15 +102,15 @@ int main() {
         for (auto &i: adj[u]) {
             int v = i.first;
             int weight = i.second;
-            if (dist[v] > (dist[u] + weight)) {
-                dist[v] = dist[u] + weight;
+            if (dist[v] > (dist[u] + weight + nodes[v-1])) {
+                dist[v] = dist[u] + weight + nodes[v-1];
                 pq.push(make_pair(dist[v], v));
             }
         } 
     }
 
-    for(auto i: dist)
-        cout << i << " ";
+    for(int i=1; i<=n; i++)
+        cout << dist[i] << " ";
     cout << endl;
     
     return 0;
