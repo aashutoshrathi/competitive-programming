@@ -24,4 +24,6 @@ XDG_CACHE_HOME/
 *.exe
 .vscode/
 test.py
+*.testcase
+*.testcases
 *.plist
